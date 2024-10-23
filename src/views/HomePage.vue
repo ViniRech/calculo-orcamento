@@ -15,7 +15,35 @@ const gateDetails = ref({
     acessoriesSelected: []
 })
 
+let errorSentence = ref('')
 const showBudget = ref(false);
+
+function verification() {
+    let sum = 0
+
+    // Height verification
+    if (gateDetails.value.height == 0 || gateDetails.value.height == '') errorSentence.value = 'Altura é um campo obrigatório'
+    else if (gateDetails.value.height < 1) errorSentence.value = 'O valor mínimo para a altura é de 1 metro'
+    else if (gateDetails.value.height > 5) errorSentence.value = 'O valor máximo para a altura é de 5 metros'
+    else sum++
+
+    // Length verification
+    if (gateDetails.value.lengthh == 0 || gateDetails.value.lengthh == '') errorSentence.value = 'Comprimento é um campo obrigatório'
+    else if (gateDetails.value.lengthh < 1) errorSentence.value = 'O valor mínimo para o comprimento é de 1 metro'
+    else if (gateDetails.value.lengthh > 10) errorSentence.value = 'O valor máximo para o comprimento é de 10 metros'
+    else sum++
+
+    // Tube and color verification
+    if (!gateDetails.value.tubeSelected || Object.keys(gateDetails.value.tubeSelected).length === 0) {
+        errorSentence.value = 'Tubo da grade é um campo obrigatório' } else sum++
+    if (!gateDetails.value.colorSelected || Object.keys(gateDetails.value.colorSelected).length === 0) { 
+        errorSentence.value = 'Cor é um campo obrigatório'} else sum++
+
+    // 
+    if (sum === 4) router.push('/budget')
+    else showBudget.value = true
+
+}
 </script>
 
 <template>
@@ -26,17 +54,17 @@ const showBudget = ref(false);
         <form>
             <div>
                 <label for="height">Altura (em metros):</label>
-                <input v-model="gateDetails.height" type="number" min="0">
+                <input required v-model="gateDetails.height" type="number" min="1" max="5">
             </div>
 
             <div>
                 <label for="length">Comprimento (em metros):</label>
-                <input v-model="gateDetails.lengthh" type="number" min="0">
+                <input required v-model="gateDetails.lengthh" type="number" min="1" max="10">
             </div>
 
             <div>
                 <label for="tube">Tubo da grade:</label>
-                <select v-model="gateDetails.tubeSelected" name="tube" id="tube">
+                <select required v-model="gateDetails.tubeSelected" name="tube" id="tube">
                     <option v-for="tube in gateInformations.tubeSelect" :key="tube.id" :value="tube">
                         {{ tube.name }}
                     </option>
@@ -45,7 +73,7 @@ const showBudget = ref(false);
 
             <div>
                 <label for="color">Cor:</label>
-                <select v-model="gateDetails.colorSelected" name="color" id="color">
+                <select required v-model="gateDetails.colorSelected" name="color" id="color">
                     <option v-for="color in gateInformations.colorSelect" :key="color.id" :value="color">
                         {{ color.name }}
                     </option>
@@ -63,12 +91,12 @@ const showBudget = ref(false);
             </section>
             
             <div>
-                <button @click.prevent="showBudget = !showBudget">Confirmar</button>
+                <button @click.prevent="verification">Confirmar</button>
             </div>
         </form>
 
         <section v-if="showBudget">
-            {{ gateDetails }}
+            {{ errorSentence }}
         </section>
     </main>
     
