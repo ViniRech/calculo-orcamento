@@ -49,7 +49,7 @@ function verification() {
 <template>
 
     <main>
-        <h2>Insira os dados do portão</h2>
+        <h2>Insira os dados do portão:</h2>
 
         <form>
             <div>
