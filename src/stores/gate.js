@@ -6,21 +6,25 @@ export const useGateInformations = defineStore('gateInformations', () => {
         {
             id: 1,
             name: 'Redondo',
+            price: 25
         },
         {
             id: 2,
-            name: 'Quadrado'
+            name: 'Quadrado',
+            price: 30
         }
     ])
 
     const colorSelect = ref([
         {
             id: 1,
-            name: 'Preto'
+            name: 'Preto',
+            price: 7
         },
         {
             id: 2,
-            name: 'Branco'
+            name: 'Branco',
+            price: 5
         }
     ])
 
@@ -38,9 +42,24 @@ export const useGateInformations = defineStore('gateInformations', () => {
         {
             id: 3,
             name: 'Ponta de lança',
-            label: 'spearhead'
+            label: 'spearhead',
+            whitePrice: 5,
+            blackPrice: 6
         }
     ])
 
-    return {tubeSelect, colorSelect, acessorySelect}
+    function getProductById(id) {
+        // Modelo universal
+        for (let product of products.value) {
+          if (product.id == id) {
+            return product
+          }
+        }
+        return {}
+    
+        // Modelo javaScript
+        // return products.value.find((product) => product.id == id)
+    }
+
+    return {tubeSelect, colorSelect, acessorySelect, getProductById}
 })

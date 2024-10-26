@@ -16,7 +16,8 @@ const gateDetails = ref({
 })
 
 let errorSentence = ref('')
-const showBudget = ref(false);
+const showCorrection = ref(false)
+const showBudget = ref(false)
 
 function verification() {
     let sum = 0
@@ -40,9 +41,57 @@ function verification() {
         errorSentence.value = 'Cor é um campo obrigatório'} else sum++
 
     // 
-    if (sum === 4) router.push('/budget')
-    else showBudget.value = true
+    // if (sum === 4) router.push(`/budget`)
+    if (sum === 4) {
+        showBudget.value = true
+        gateBudget()
+        showCorrection.value = false
+    }
+    else showCorrection.value = true
 
+}
+
+// depois passar para a outra página
+const obligatedPrice = 200 
+const socialGateObligatedPrice = 100
+// const blackTubePrice = 35
+// const whiteTubePrice = 30
+// const valorReguaPreta = 55
+// const valorReguaBranca = 50
+// const blackSpearheadPrice = 5
+// const whiteSpearheadPrice = 6
+const materialsPrice = ref(0)
+const valorMaoDeObra = ref(0)
+
+function gateBudget() {
+    let h = gateDetails.value.height
+    let l = gateDetails.value.lengthh
+    let color = gateDetails.value.colorSelected
+    let cP = gateDetails.value.colorSelected.price
+    // valor tubo
+    let acessories = gateDetails.value.acessoriesSelected
+    let tubePrice = 0
+    let acessoriesPrice = 0
+
+    // Cálculo do tubo
+    tubePrice = 3 * (h * l) / 1.8 //arredondar para cima
+    tubePrice *= 
+    // Cálculo da régua
+
+    // Cálculo dos acessórios
+    if (acessories.find((acessory) => acessory.id == 1)) {
+        //Régua mais obrigatórios
+    }
+    if (acessories.find((acessory) => acessory.id == 2)) {
+        if (color.id === 1) acessoriesPrice += (10 * (h * l) / 9) * blackTubePrice
+        else if (color.id === 2) acessoriesPrice += (10 * (h * l) / 9) * whiteTubePrice
+    }
+    if (acessories.find((acessory) => acessory.id == 3)) {
+        if (color.id === 1) acessoriesPrice += (10 * (h * l) / 1.8) * blackSpearheadPrice
+        else if (color.id === 2) acessoriesPrice += (10 * (h * l) / 1.8) * whiteSpearheadPrice
+    }
+
+    materialsPrice.value = tubePrice + obligatedPrice + acessoriesPrice
 }
 </script>
 
@@ -95,8 +144,12 @@ function verification() {
             </div>
         </form>
 
-        <section v-if="showBudget">
+        <section v-if="showCorrection">
             {{ errorSentence }}
+        </section>
+
+        <section v-if="showBudget">
+            {{ materialsPrice }}
         </section>
     </main>
     
