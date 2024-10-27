@@ -52,8 +52,8 @@ function verification() {
 }
 
 // depois passar para a outra página
-const obligatedPrice = 200 
-const socialGateObligatedPrice = 100
+const mandatoryPrice = 150 
+const socialGateMandatoryPrice = 100
 const materialsPrice = ref(0)
 const valorMaoDeObra = ref(0)
 
@@ -65,29 +65,32 @@ function gateBudget() {
     let acessories = gateDetails.value.acessoriesSelected
 
     // Cálculo do tubo
-    let tubePrice = 3 * (h * l) / 1.8 //arredondar para cima
-    if (color.id == 1) tubePrice *= tube.blackPrice
-    else if (color.id == 2) tubePrice *= tube.whitePrice
+    let tubePrice = Math.ceil(3 * (h * l) / 1.8)
+    if (tube.id == 1) tubePrice *= color.circleTubePrice
+    if (tube.id == 2) tubePrice *= color.squareTubePrice
 
     // Cálculo da régua
+    let rulerPrice = 0
+    rulerPrice += (l + h) * color.rulerPrice / 6
 
+    if (h > 2.4) rulerPrice += (l * color.rulerPrice) * 4
+    else rulerPrice += (l * color.rulerPrice) * 3
+    
     // Cálculo dos acessórios
     let acessoriesPrice = 0
     if (acessories.find((acessory) => acessory.id == 1)) {
-        //Régua mais obrigatórios
+        acessoriesPrice += (h * color.rulerPrice) + (0.8 * color.rulerPrice)
+        acessoriesPrice += socialGateMandatoryPrice
     }
     if (acessories.find((acessory) => acessory.id == 2)) {
-        acessoriesPrice += (10 * (h * l) / 9)
-        if (color.id == 1) acessoriesPrice *= tube.blackPrice
-        else if (color.id == 2) acessoriesPrice *= tube.whitePrice
+        if (tube.id == 1) acessoriesPrice += (10 * (h * l) / 9) * color.circleTubePrice
+        else if (tube.id == 2) acessoriesPrice += (10 * (h * l) / 9) * color.squareTubePrice
     }
     if (acessories.find((acessory) => acessory.id == 3)) {
-        acessoriesPrice += (10 * (h * l) / 1.8)
-        if (color.id == 1) acessoriesPrice *= blackSpearheadPrice
-        else if (color.id == 2) acessoriesPrice *= whiteSpearheadPrice
+        acessoriesPrice += (10 * (h * l) / 1.8) * color.spearheadPrice
     }
 
-    materialsPrice.value = tubePrice + obligatedPrice + acessoriesPrice
+    materialsPrice.value = (tubePrice + rulerPrice + mandatoryPrice + acessoriesPrice).toFixed(2)
 }
 </script>
 
