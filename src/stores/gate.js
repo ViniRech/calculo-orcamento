@@ -6,12 +6,14 @@ export const useGateInformations = defineStore('gateInformations', () => {
         {
             id: 1,
             name: 'Redondo',
-            price: 25
+            whitePrice: 25,
+            blackPrice: 30
         },
         {
             id: 2,
             name: 'Quadrado',
-            price: 30
+            whitePrice: 30,
+            blackPrice: 35
         }
     ])
 
@@ -19,12 +21,10 @@ export const useGateInformations = defineStore('gateInformations', () => {
         {
             id: 1,
             name: 'Preto',
-            price: 7
         },
         {
             id: 2,
             name: 'Branco',
-            price: 5
         }
     ])
 

@@ -43,9 +43,9 @@ function verification() {
     // 
     // if (sum === 4) router.push(`/budget`)
     if (sum === 4) {
+        showCorrection.value = false
         showBudget.value = true
         gateBudget()
-        showCorrection.value = false
     }
     else showCorrection.value = true
 
@@ -54,41 +54,37 @@ function verification() {
 // depois passar para a outra página
 const obligatedPrice = 200 
 const socialGateObligatedPrice = 100
-// const blackTubePrice = 35
-// const whiteTubePrice = 30
-// const valorReguaPreta = 55
-// const valorReguaBranca = 50
-// const blackSpearheadPrice = 5
-// const whiteSpearheadPrice = 6
 const materialsPrice = ref(0)
 const valorMaoDeObra = ref(0)
 
 function gateBudget() {
     let h = gateDetails.value.height
     let l = gateDetails.value.lengthh
+    let tube = gateDetails.value.tubeSelected
     let color = gateDetails.value.colorSelected
-    let cP = gateDetails.value.colorSelected.price
-    // valor tubo
     let acessories = gateDetails.value.acessoriesSelected
-    let tubePrice = 0
-    let acessoriesPrice = 0
 
     // Cálculo do tubo
-    tubePrice = 3 * (h * l) / 1.8 //arredondar para cima
-    tubePrice *= 
+    let tubePrice = 3 * (h * l) / 1.8 //arredondar para cima
+    if (color.id == 1) tubePrice *= tube.blackPrice
+    else if (color.id == 2) tubePrice *= tube.whitePrice
+
     // Cálculo da régua
 
     // Cálculo dos acessórios
+    let acessoriesPrice = 0
     if (acessories.find((acessory) => acessory.id == 1)) {
         //Régua mais obrigatórios
     }
     if (acessories.find((acessory) => acessory.id == 2)) {
-        if (color.id === 1) acessoriesPrice += (10 * (h * l) / 9) * blackTubePrice
-        else if (color.id === 2) acessoriesPrice += (10 * (h * l) / 9) * whiteTubePrice
+        acessoriesPrice += (10 * (h * l) / 9)
+        if (color.id == 1) acessoriesPrice *= tube.blackPrice
+        else if (color.id == 2) acessoriesPrice *= tube.whitePrice
     }
     if (acessories.find((acessory) => acessory.id == 3)) {
-        if (color.id === 1) acessoriesPrice += (10 * (h * l) / 1.8) * blackSpearheadPrice
-        else if (color.id === 2) acessoriesPrice += (10 * (h * l) / 1.8) * whiteSpearheadPrice
+        acessoriesPrice += (10 * (h * l) / 1.8)
+        if (color.id == 1) acessoriesPrice *= blackSpearheadPrice
+        else if (color.id == 2) acessoriesPrice *= whiteSpearheadPrice
     }
 
     materialsPrice.value = tubePrice + obligatedPrice + acessoriesPrice
