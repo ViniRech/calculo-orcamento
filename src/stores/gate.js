@@ -2,6 +2,15 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 export const useGateInformations = defineStore('gateInformations', () => {
+    const gateDetails = ref({
+        id: 1,
+        height: 0,
+        lengthh: 0,
+        tubeSelected: {},
+        colorSelected: {},
+        acessoriesSelected: []
+    })
+
     const tubeSelect = ref([
         {
             id: 1,
@@ -52,18 +61,23 @@ export const useGateInformations = defineStore('gateInformations', () => {
         }
     ])
 
-    function getProductById(id) {
-        // Modelo universal
-        for (let product of products.value) {
-          if (product.id == id) {
-            return product
-          }
-        }
-        return {}
-    
-        // Modelo javaScript
-        // return products.value.find((product) => product.id == id)
+    const materialsPrice = ref(0)
+    const laborValue = ref(0)
+    const budgetValue = materialsPrice.value + laborValue.value
+
+    // Função para atualizar os detalhes do portão
+    function setGateDetails(details) {
+        gateDetails.value = { ...gateDetails.value, ...details }
     }
 
-    return {tubeSelect, colorSelect, acessorySelect, getProductById}
+    return {
+        gateDetails,
+        tubeSelect, 
+        colorSelect, 
+        acessorySelect,
+        materialsPrice,
+        laborValue,
+        budgetValue,
+        setGateDetails
+    }
 })
