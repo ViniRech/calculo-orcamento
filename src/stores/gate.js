@@ -1,15 +1,7 @@
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 
 export const useGateInformations = defineStore('gateInformations', () => {
-    const gateDetails = ref({
-        id: 1,
-        height: 0,
-        lengthh: 0,
-        tubeSelected: {},
-        colorSelected: {},
-        acessoriesSelected: []
-    })
 
     const tubeSelect = ref([
         {
@@ -63,7 +55,7 @@ export const useGateInformations = defineStore('gateInformations', () => {
 
     const materialsPrice = ref(0)
     const laborValue = ref(0)
-    const budgetValue = materialsPrice.value + laborValue.value
+    const budgetValue = computed(() => materialsPrice.value + laborValue.value)
 
     // Função para atualizar os detalhes do portão
     function setGateDetails(details) {
