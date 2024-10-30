@@ -1,77 +1,81 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { defineProps, ref, onMounted, computed } from 'vue'
 
-const gateInformations = useGateInformations()
-const gate = gateInformations.gateDetails
+const props = defineProps(['gateDetails'])
+
+const mensagem = ref("")
+function amostragem() {
+    localBudgetDetails.value.materialsPrice = 100
+}
+
+onMounted(() => {
+    gateBudget()
+})
 
 const localBudgetDetails = ref({
     mandatoryPrice: 150,
     socialGateMandatoryPrice: 100,
     tubePrice: 0,
     rulerPrice: 0,
-    materialsPrice: 0,
+    acessoriesPrice: 0,
+    // materialsPrice: computed(() => {localBudgetDetails.value.tubePrice + localBudgetDetails.value.rulerPrice + localBudgetDetails.value.acessoriesPrice + localBudgetDetails.value.mandatoryPrice}),
 })
 
+const materialsPrice = computed(() => localBudgetDetails.value.mandatoryPrice + 
+localBudgetDetails.value.tubePrice + localBudgetDetails.value.rulerPrice + localBudgetDetails.value.acessoriesPrice)
+
 function gateBudget() {
-    const h = gate.value.height
-    const l = gate.value.lengthh
-    const tube = gate.value.tubeSelected
-    const color = gate.value.colorSelected
-    const acessories = gate.value.acessoriesSelected
-    const budget = localBudgetDetails.value
+    const h = props.gateDetails.height
+    const l = props.gateDetails.lengthh
+    const tube = props.gateDetails.tubeSelected
+    const color = props.gateDetails.colorSelected
+    const acessories = props.gateDetails.acessoriesSelected
 
     // CÁLCULO DOS MATERIAIS
     // Tubo
-    budget.tubePrice = Math.ceil(3 * (h * l) / 1.8)
-    if (tube.id == 1) tubePrice *= color.circleTubePrice
-    if (tube.id == 2) tubePrice *= color.squareTubePrice
+    localBudgetDetails.value.tubePrice = Math.ceil(3 * (h * l) / 1.8)
+    if (tube.id == 1) localBudgetDetails.value.tubePrice *= color.circleTubePrice
+    if (tube.id == 2) localBudgetDetails.value.tubePrice *= color.squareTubePrice
 
     // Régua
-    budget.rulerPrice = h * color.rulerPrice / 6
+    localBudgetDetails.value.rulerPrice = h * color.rulerPrice / 6
 
-    if (h > 2.4) budget.rulerPrice += (l * color.rulerPrice / 6) * 4
-    else budget.rulerPrice += (l * color.rulerPrice / 6) * 3
+    if (h > 2.4) localBudgetDetails.value.rulerPrice += (l * color.rulerPrice / 6) * 4
+    else localBudgetDetails.value.rulerPrice += (l * color.rulerPrice / 6) * 3
     
     // Cálculo dos acessórios
-    let acessoriesPrice = 0
 
     // Portão social
     if (acessories.find((acessory) => acessory.id == 1)) {
-        acessoriesPrice += (h * color.rulerPrice) + (0.8 * color.rulerPrice)
-        acessoriesPrice += budget.socialGateMandatoryPrice
+        localBudgetDetails.value.acessoriesPrice += (h * color.rulerPrice) + (0.8 * color.rulerPrice)
+        localBudgetDetails.value.acessoriesPrice += localBudgetDetails.value.socialGateMandatoryPrice
     }
 
     // Cachorreira
     if (acessories.find((acessory) => acessory.id == 2)) {
-        if (tube.id == 1) acessoriesPrice += (10 * (h * l) / 9) * color.circleTubePrice
-        else if (tube.id == 2) acessoriesPrice += (10 * (h * l) / 9) * color.squareTubePrice
+        if (tube.id == 1) localBudgetDetails.value.acessoriesPrice += (10 * (h * l) / 9) * color.circleTubePrice
+        else if (tube.id == 2) localBudgetDetails.value.acessoriesPrice += (10 * (h * l) / 9) * color.squareTubePrice
 
-        if (h <= 2.4) acessoriesPrice += l * color.rulerPrice / 6
+        if (h <= 2.4) localBudgetDetails.value.acessoriesPrice += l * color.rulerPrice / 6
     }
 
     // Ponta de lança
     if (acessories.find((acessory) => acessory.id == 3)) {
-        acessoriesPrice += (10 * (h * l) / 1.8) * color.spearheadPrice
+        localBudgetDetails.value.acessoriesPrice += (10 * (h * l) / 1.8) * color.spearheadPrice
     }
-
-    localBudgetDetails.materialsPrice = (tubePrice + rulerPrice + budget.mandatoryPrice + acessoriesPrice).toFixed(2)
 }
-
-onMounted(() => {
-    gateBudget()
-})
 </script>
 
 <template>
     <h1>Dados do orçamento</h1>
     
-    <p>Altura: {{ gate.height }}</p>
-    <p>Comprimento: {{ gate.lengthh }}</p>
-    <p>Tubo: {{ gate.tubeSelected.name }}</p>
-    <p>Cor: {{ gate.colorSelected.name }}</p>
-    <div v-if="gate.acessoriesSelected">
+    <p>Altura: {{ props.gateDetails.height }}</p>
+    <p>Comprimento: {{ props.gateDetails.lengthh }}</p>
+    <p>Tubo: {{ props.gateDetails.tubeSelected.name }}</p>
+    <p>Cor: {{ props.gateDetails.colorSelected.name }}</p>
+    <div v-if="props.gateDetails.acessoriesSelected">
         <h3>Adicionais:</h3>
-        <template v-for="acessory in gate.acessoriesSelected" :key="acessory.id">
+        <template v-for="acessory in props.gateDetails.acessoriesSelected" :key="acessory.id">
             <ul>
                 <li>{{ acessory.name }}</li>
             </ul>
@@ -79,5 +83,7 @@ onMounted(() => {
     </div>
 
     <h2>Valores Finais</h2>
-    {{ localBudgetDetails.materialsPrice }}
+    {{ materialsPrice }} <br>
+    {{ localBudgetDetails }}
+    {{ mensagem }}
 </template>

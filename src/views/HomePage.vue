@@ -44,7 +44,9 @@ function verification() {
     if (sum === 4) {
         showCorrection.value = false
         showBudget.value = true
-    } else showCorrection.value = true
+    } else {
+        showCorrection.value = true
+    }
 
 }
 </script>
@@ -54,7 +56,6 @@ function verification() {
     <main>
         <h2>Insira os dados do portão:</h2>
 
-        <form>
             <div>
                 <label for="height">Altura (em metros):</label>
                 <input required v-model="gateDetails.height" type="number" min="1" max="5">
@@ -96,13 +97,13 @@ function verification() {
             <div>
                 <button @click.prevent="verification">Confirmar</button>
             </div>
-        </form>
 
         <section v-if="showCorrection">
+            Erros:::
             {{ errorSentence }}
         </section>
 
-        <ShowBudget v-if="showBudget"></ShowBudget>
+        <ShowBudget :gateDetails="gateDetails" v-if="showBudget" />
     </main>
     
 </template>

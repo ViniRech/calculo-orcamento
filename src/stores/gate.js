@@ -63,7 +63,6 @@ export const useGateInformations = defineStore('gateInformations', () => {
     }
 
     return {
-        gateDetails,
         tubeSelect, 
         colorSelect, 
         acessorySelect,
